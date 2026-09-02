@@ -4,8 +4,9 @@ import { API_BASE_URL, DEMO_MODE } from "./client";
 export async function fetchVoices(): Promise<Voice[]> {
   if (DEMO_MODE) {
     return [
+      { id: "tyler-brad-pitt", label: "Tyler — Brad Pitt (Cinematic)" },
+      { id: "tyler-durden-gritty", label: "Tyler — Gritty & Confident" },
       { id: "demo-guy", label: "Guy — Demo Voice" },
-      { id: "demo-jenny", label: "Jenny — Demo Voice" },
     ];
   }
   const response = await fetch(`${API_BASE_URL}/voices`);

@@ -9,7 +9,7 @@ def test_lists_curated_voices() -> None:
     response = client.get("/api/voices")
 
     assert response.status_code == 200
-    assert response.json()["voices"][0]["id"] == "en-US-GuyNeural"
+    assert response.json()["voices"][0]["id"] == "tyler-brad-pitt"
 
 
 def test_tts_returns_mp3(monkeypatch) -> None:

@@ -47,7 +47,7 @@ export function App() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const [voices, setVoices] = useState<Voice[]>([]);
-  const [voiceId, setVoiceId] = useState("en-US-GuyNeural");
+  const [voiceId, setVoiceId] = useState("tyler-brad-pitt");
   const [level, setLevel] = useState(0);
   const [backendState, setBackendState] = useState<ComponentState>("unknown");
   const [backendStarting, setBackendStarting] = useState(!DEMO_MODE);
