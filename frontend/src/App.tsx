@@ -13,7 +13,7 @@ import { executeLocalAction, getLocalActionStatus, isLocalActionRequest, LocalAc
 import { DEMO_MODE } from "./config/mode";
 import cyberpunkBackgroundVideo from "./assets/cyberpunk-background.mp4";
 
-type Message = { author: "user" | "jarvis"; text: string };
+type Message = { author: "user" | "tyler" | "jarvis"; text: string };
 type Status = "idle" | "listening" | "thinking" | "speaking" | "error";
 type PendingAction =
   | { type: "web"; action: WebAction }
@@ -82,7 +82,7 @@ export function App() {
       setBackendState(healthy ? "ready" : "error");
       setBackendStarting(false);
       if (!healthy) {
-        setError("Jarvis backend did not start. Restart the app and try again.");
+        setError("Tyler backend did not start. Restart the app and try again.");
         return;
       }
       const voiceRequest = fetchVoices();
@@ -193,7 +193,7 @@ export function App() {
     }
   }
 
-  async function askJarvis(text: string) {
+  async function askTyler(text: string) {
     stopSpeech();
     setError("");
     setPendingAction(null);
@@ -202,14 +202,14 @@ export function App() {
     if (DEMO_MODE) {
       if (isLocalActionRequest(text)) {
         const reply = "Local app actions will be connected to the backend on Day 2.";
-        setMessages((current) => [...current, { author: "jarvis", text: reply }]);
+        setMessages((current) => [...current, { author: "tyler", text: reply }]);
         setStatus("idle");
         void playSpeech(reply);
         return;
       }
       if (isWebActionRequest(text)) {
         const reply = "Web actions will be connected to the backend on Day 2.";
-        setMessages((current) => [...current, { author: "jarvis", text: reply }]);
+        setMessages((current) => [...current, { author: "tyler", text: reply }]);
         setStatus("idle");
         void playSpeech(reply);
         return;
@@ -218,11 +218,11 @@ export function App() {
       try {
         const result = await sendChatMessage(sessionId.current, text);
         setChatState("ready");
-        setMessages((current) => [...current, { author: "jarvis", text: result.reply }]);
+        setMessages((current) => [...current, { author: "tyler", text: result.reply }]);
         void playSpeech(result.reply);
       } catch (reason) {
         setChatState("error");
-        setError(reason instanceof Error ? reason.message : "Jarvis could not process that message.");
+        setError(reason instanceof Error ? reason.message : "Tyler could not process that message.");
         setStatus("error");
       }
       return;
@@ -236,7 +236,7 @@ export function App() {
         setStatus("idle");
       } catch (reason) {
         setLocalActionsState("error");
-        setError(reason instanceof Error ? reason.message : "Jarvis could not prepare that local application.");
+        setError(reason instanceof Error ? reason.message : "Tyler could not prepare that local application.");
         setStatus("error");
       }
       return;
@@ -249,7 +249,7 @@ export function App() {
         setPendingAction({ type: "web", action: webAction });
         setStatus("idle");
       } catch (reason) {
-        setError(reason instanceof Error ? reason.message : "Jarvis could not prepare that web action.");
+        setError(reason instanceof Error ? reason.message : "Tyler could not prepare that web action.");
         setStatus("error");
       }
       return;
@@ -259,11 +259,11 @@ export function App() {
     try {
       const result = await sendChatMessage(sessionId.current, text);
       setChatState("ready");
-      setMessages((current) => [...current, { author: "jarvis", text: result.reply }]);
+      setMessages((current) => [...current, { author: "tyler", text: result.reply }]);
       void playSpeech(result.reply);
     } catch (reason) {
       setChatState("error");
-      setError(reason instanceof Error ? reason.message : "Jarvis could not process that message.");
+      setError(reason instanceof Error ? reason.message : "Tyler could not process that message.");
       setStatus("error");
     }
   }
@@ -276,7 +276,7 @@ export function App() {
     if (currentAction.type === "web") {
       window.open(currentAction.action.url, "_blank", "noopener,noreferrer");
       const reply = `Opening ${currentAction.action.label}.`;
-      setMessages((current) => [...current, { author: "jarvis", text: reply }]);
+      setMessages((current) => [...current, { author: "tyler", text: reply }]);
       setStatus("idle");
       void playSpeech(reply);
       return;
@@ -286,13 +286,13 @@ export function App() {
       setStatus("thinking");
       try {
         const result = await executeLocalAction(currentAction.action.appId);
-        setMessages((current) => [...current, { author: "jarvis", text: result.message }]);
+        setMessages((current) => [...current, { author: "tyler", text: result.message }]);
         setLocalActionsState("ready");
         setStatus("idle");
         void playSpeech(result.message);
       } catch (reason) {
         setLocalActionsState("error");
-        setError(reason instanceof Error ? reason.message : "Jarvis could not open that local application.");
+        setError(reason instanceof Error ? reason.message : "Tyler could not open that local application.");
         setStatus("error");
       }
     }
@@ -301,7 +301,7 @@ export function App() {
   function cancelAction() {
     setPendingAction(null);
     const reply = "Action cancelled.";
-    setMessages((current) => [...current, { author: "jarvis", text: reply }]);
+    setMessages((current) => [...current, { author: "tyler", text: reply }]);
     setStatus("idle");
   }
 
@@ -310,7 +310,7 @@ export function App() {
     const text = input.trim();
     if (!text || status === "thinking" || backendStarting) return;
     setInput("");
-    await askJarvis(text);
+    await askTyler(text);
   }
 
   async function startListening() {
@@ -362,7 +362,7 @@ export function App() {
           const demoNotice = "Voice transcription will be connected on Day 2.";
           setMessages((current) => [
             ...current,
-            { author: "jarvis", text: demoNotice },
+            { author: "tyler", text: demoNotice },
           ]);
           setSttState("ready");
           setStatus("idle");
@@ -376,10 +376,10 @@ export function App() {
             const transcript = await transcribeRecording(new Blob(chunks, { type: "audio/webm" }));
             if (!transcript) throw new Error("No speech was detected. Please try again.");
             setSttState("ready");
-            await askJarvis(transcript);
+            await askTyler(transcript);
           } catch (reason) {
             setSttState("error");
-            setError(reason instanceof Error ? reason.message : "Jarvis could not transcribe that recording.");
+            setError(reason instanceof Error ? reason.message : "Tyler could not transcribe that recording.");
             setStatus("error");
           }
         })();
@@ -393,7 +393,7 @@ export function App() {
       setError(
         reason instanceof Error && reason.name === "NotAllowedError"
           ? "Microphone permission was denied. Text chat remains available."
-          : "Jarvis could not access the microphone."
+          : "Tyler could not access the microphone."
       );
       setStatus("error");
     }
@@ -431,7 +431,7 @@ export function App() {
         <source src={cyberpunkBackgroundVideo} type="video/mp4" />
       </video>
       <AmbientHud active={active} level={status === "listening" ? level : status === "speaking" ? 0.72 : 0.35} />
-      <MovablePanel id="orb" label="Jarvis voice orb" className="orb-panel" defaultPosition={panelPositions.current.orb}>
+      <MovablePanel id="orb" label="Tyler voice orb" className="orb-panel" defaultPosition={panelPositions.current.orb}>
         <OrbControl
           disabled={status === "thinking" || backendStarting}
           state={status}
@@ -448,9 +448,9 @@ export function App() {
       <MovablePanel id="briefing" label="Local system briefing" className="briefing-panel-wrapper" defaultPosition={panelPositions.current.briefing}>
         <BriefingPanel />
       </MovablePanel>
-      <MovablePanel id="conversation" label="Jarvis conversation" className="chat-panel" defaultPosition={panelPositions.current.chat}>
-        <section className="chat-card" aria-label="Jarvis assistant">
-          <p className="jarvis-brand">JARVIS</p>
+      <MovablePanel id="conversation" label="Tyler conversation" className="chat-panel" defaultPosition={panelPositions.current.chat}>
+        <section className="chat-card" aria-label="Tyler assistant">
+          <p className="tyler-brand">TYLER</p>
           <h1>At your service.</h1>
           <p className="connection-state">{stateLabel}</p>
           <div className="messages" ref={messagesRef} aria-live="polite">
@@ -460,7 +460,7 @@ export function App() {
                 {message.text}
               </p>
             ))}
-            {status === "thinking" && <p className="message jarvis">Thinking…</p>}
+            {status === "thinking" && <p className="message tyler">Thinking…</p>}
             {pendingAction && (
               <div className="web-action-confirmation" role="alert">
                 {pendingAction.type === "web" ? (
@@ -496,11 +496,11 @@ export function App() {
             onPointerCancel={finishListening}
             disabled={status === "thinking" || backendStarting}
           >
-            {status === "listening" ? "Release to send" : backendStarting ? "Starting Jarvis…" : "Hold to talk"}
+            {status === "listening" ? "Release to send" : backendStarting ? "Starting Tyler…" : "Hold to talk"}
           </button>
           <form onSubmit={handleSubmit} noValidate className="composer">
             <label className="sr-only" htmlFor="chat-input">
-              Message Jarvis
+              Message Tyler
             </label>
             <input
               id="chat-input"

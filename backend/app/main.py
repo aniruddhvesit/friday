@@ -7,7 +7,7 @@ from app.api.speech import router as speech_router
 from app.api.web_actions import router as web_actions_router
 from app.settings import settings
 
-app = FastAPI(title="Jarvis Backend", version="0.1.0")
+app = FastAPI(title="Tyler Backend", version="0.1.0")
 
 # Restrict CORS strictly to local frontend origins (never use wildcard *)
 app.add_middleware(

@@ -1,6 +1,6 @@
-# Jarvis backend
+# Tyler backend
 
-The backend is a small FastAPI service that keeps credentials server-side and exposes chat, speech, action-planning, and optional local-app endpoints.
+The backend is a FastAPI service that keeps credentials server-side and exposes chat, speech, action-planning, and local desktop task endpoints.
 
 ## Prerequisites
 
@@ -10,8 +10,6 @@ The backend is a small FastAPI service that keeps credentials server-side and ex
 ## Install and run
 
 ```powershell
-git clone https://github.com/pruthvi828/DR-doom-Day-2-Backend.git
-cd DR-doom-Day-2-Backend
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
@@ -32,9 +30,9 @@ The API binds to `127.0.0.1:8765` by default. Check it at `http://127.0.0.1:8765
 | --- | --- |
 | `GROQ_API_KEY` | Required secret used for Groq chat and transcription. |
 | `GROQ_CHAT_MODEL` | Optional Groq chat model override. |
-| `JARVIS_BACKEND_HOST` / `JARVIS_BACKEND_PORT` | Local bind address and port. Keep the host loopback for workshop/local use. |
-| `JARVIS_ALLOWED_ORIGINS` | Comma-separated exact frontend origins for CORS. Never use `*`. |
-| `JARVIS_LOCAL_ACTIONS_ENABLED` | Defaults to `false`. Enables the four-app Windows allowlist only for a local browser. |
+| `TYLER_BACKEND_HOST` / `TYLER_BACKEND_PORT` | Local bind address and port. Keep the host loopback for local use. |
+| `TYLER_ALLOWED_ORIGINS` | Comma-separated exact frontend origins for CORS. Never use `*`. |
+| `TYLER_LOCAL_ACTIONS_ENABLED` | Defaults to `true`. Enables the Windows application allowlist. |
 
 Never commit `.env`.
 
@@ -54,7 +52,7 @@ Never commit `.env`.
 
 ## Safety boundary
 
-The planner can only produce browser websites/searches. The optional local bridge accepts only the IDs `calculator`, `notepad`, `file_explorer`, and `vscode`. It rejects non-local browser origins and does not accept arbitrary paths, program names, shell commands, arguments, or LLM-generated execution data.
+The planner produces browser websites/searches and safe allowlisted Windows applications with user confirmation. It rejects non-local browser origins and does not accept arbitrary shell commands.
 
 ## Tests
 
@@ -62,5 +60,3 @@ The planner can only produce browser websites/searches. The optional local bridg
 cd backend
 python -m pytest tests -q
 ```
-
-For production, use a process manager appropriate to your Python host and set exact CORS origins. A public deployment must leave `JARVIS_LOCAL_ACTIONS_ENABLED=false`.

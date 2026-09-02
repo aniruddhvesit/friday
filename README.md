@@ -1,6 +1,6 @@
-# Friday - AI Voice & Web Assistant
+# Tyler - AI Voice & Web Assistant
 
-Friday is an interactive AI assistant featuring a futuristic HUD interface, voice input/output, real-time conversational chat, and smart web automation planner.
+Tyler is an interactive AI assistant featuring a futuristic HUD interface, voice input/output, real-time conversational chat, desktop task automation, and smart web automation planner.
 
 ---
 

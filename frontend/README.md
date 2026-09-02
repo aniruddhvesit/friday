@@ -1,15 +1,13 @@
-# Jarvis Frontend Workshop (`jarvis-frontend-workshop`)
+# Tyler Frontend (`tyler-frontend`)
 
 The frontend is a React 19 + Vite application. It provides the futuristic cyberpunk HUD interface, voice orb animation, microphone audio capture, SpeechSynthesis/Edge TTS playback, safe web navigation confirmation, and movable panels.
 
 ## Prerequisite
 
 - Node.js 20 or newer
-- On Day 2: The Jarvis backend running at `http://127.0.0.1:8765`
+- The Tyler backend running at `http://127.0.0.1:8765`
 
 ## Quick Start
-
-### Day 1 (Demo Mode — No Backend Required)
 
 1. Set up the environment configuration:
    ```powershell
@@ -25,28 +23,7 @@ The frontend is a React 19 + Vite application. It provides the futuristic cyberp
    ```
 4. Open `http://localhost:1420` in your browser.
 
-In Demo Mode:
-- The UI runs completely standalone with mock responses.
-- Test typed messages and see instant responses spoken via browser speech synthesis.
-- Test the voice orb, microphone permissions, and HUD audio meters.
-- Web actions and local actions inform you that backend integration happens on Day 2.
-
----
-
-### Day 2 (Full Backend Integration)
-
-1. Ensure your `jarvis-backend-workshop` FastAPI server is running on `http://127.0.0.1:8765`.
-2. Edit your `.env` file:
-   ```env
-   VITE_DEMO_MODE=false
-   VITE_API_BASE_URL=/api
-   ```
-3. Restart the Vite development server:
-   ```powershell
-   npm run dev
-   ```
-
-Now Jarvis connects live to:
+Tyler connects live to:
 - Groq AI chat (`POST /api/chat`)
 - Whisper speech-to-text (`POST /api/transcribe`)
 - Edge TTS high-quality neural voice output (`POST /api/tts`)

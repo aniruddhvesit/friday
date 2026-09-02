@@ -55,6 +55,6 @@ export async function planWebAction(text: string): Promise<WebAction> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text }),
   });
-  if (!response.ok) throw new Error("Jarvis could not prepare that web action.");
+  if (!response.ok) throw new Error("Tyler could not prepare that web action.");
   return response.json() as Promise<WebAction>;
 }

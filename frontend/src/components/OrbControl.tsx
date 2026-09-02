@@ -9,10 +9,10 @@ type OrbControlProps = {
   state: OrbState;
 };
 
-const letters = ["J", "A", "R", "V", "I", "S"];
+const letters = ["T", "Y", "L", "E", "R"];
 
 export function OrbControl({ disabled, onStart, onStop, state }: OrbControlProps) {
-  const label = state === "listening" ? "Release to send" : state === "thinking" ? "Processing request" : state === "speaking" ? "Jarvis is responding" : "Hold to talk with Jarvis";
+  const label = state === "listening" ? "Release to send" : state === "thinking" ? "Processing request" : state === "speaking" ? "Tyler is responding" : "Hold to talk with Tyler";
   return (
     <button
       type="button"

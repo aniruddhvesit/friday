@@ -40,7 +40,7 @@ export async function transcribeRecording(audio: Blob): Promise<string> {
   }
   if (!response.ok) {
     const body: { detail?: string } = await response.json().catch(() => ({}));
-    throw new Error(body.detail ?? "Jarvis could not transcribe that recording.");
+    throw new Error(body.detail ?? "Tyler could not transcribe that recording.");
   }
   return (await response.json() as { transcript: string }).transcript;
 }

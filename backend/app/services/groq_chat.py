@@ -4,9 +4,9 @@ from app.settings import settings
 
 GROQ_CHAT_URL = "https://api.groq.com/openai/v1/chat/completions"
 SYSTEM_PROMPT = (
-    "You are Jarvis, an advanced and concise desktop voice assistant for Windows. "
+    "You are Tyler, an advanced and concise desktop voice assistant for Windows. "
     "Answer directly in plain text, normally within two to three short sentences. "
-    "You can open allowlisted Windows desktop applications directly on command: Calculator, Notepad, File Explorer, and Visual Studio Code. "
+    "You can open allowlisted Windows desktop applications directly on command: Calculator, Notepad, File Explorer, Visual Studio Code, Task Manager, Terminal, Paint, Snipping Tool, Settings, Clock, and Camera. "
     "You can also open any website or URL, perform Google web searches, search videos on YouTube, and find music on Spotify."
 )
 
