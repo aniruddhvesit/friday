@@ -16,11 +16,34 @@ def enable_local_actions(monkeypatch) -> None:
 
 def test_local_planner_returns_only_allowlisted_app() -> None:
     plan = local_actions.make_local_action_plan("Please open Calculator")
-
     assert plan == {
         "kind": "open_local_app",
         "app_id": "calculator",
         "label": "Calculator",
+        "requires_confirmation": True,
+    }
+
+    taskmgr_plan = local_actions.make_local_action_plan("Open Task Manager")
+    assert taskmgr_plan == {
+        "kind": "open_local_app",
+        "app_id": "task_manager",
+        "label": "Task Manager",
+        "requires_confirmation": True,
+    }
+
+    terminal_plan = local_actions.make_local_action_plan("Launch Command Prompt")
+    assert terminal_plan == {
+        "kind": "open_local_app",
+        "app_id": "terminal",
+        "label": "Terminal",
+        "requires_confirmation": True,
+    }
+
+    snipping_plan = local_actions.make_local_action_plan("Take a screenshot with snipping tool")
+    assert snipping_plan == {
+        "kind": "open_local_app",
+        "app_id": "snipping_tool",
+        "label": "Snipping Tool",
         "requires_confirmation": True,
     }
 

@@ -48,19 +48,34 @@ class WebActionPlanResponse(BaseSchema):
     url: str = Field(min_length=1, max_length=2_000)
 
 
+LocalAppIdType = Literal[
+    "calculator",
+    "notepad",
+    "file_explorer",
+    "vscode",
+    "task_manager",
+    "terminal",
+    "paint",
+    "snipping_tool",
+    "settings",
+    "clock",
+    "camera",
+]
+
+
 class LocalActionPlanRequest(BaseSchema):
     text: str = Field(min_length=1, max_length=2_000)
 
 
 class LocalActionPlanResponse(BaseSchema):
     kind: Literal["open_local_app"]
-    app_id: Literal["calculator", "notepad", "file_explorer", "vscode"]
+    app_id: LocalAppIdType
     label: str = Field(min_length=1, max_length=160)
     requires_confirmation: bool
 
 
 class LocalActionExecuteRequest(BaseSchema):
-    app_id: Literal["calculator", "notepad", "file_explorer", "vscode"]
+    app_id: LocalAppIdType
     confirmed: Literal[True]
 
 

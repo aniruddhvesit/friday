@@ -3,13 +3,25 @@ import { isCapabilityQuery } from "./webActions";
 
 export type LocalAction = {
   kind: "open_local_app";
-  appId: "calculator" | "notepad" | "file_explorer" | "vscode";
+  appId:
+    | "calculator"
+    | "notepad"
+    | "file_explorer"
+    | "vscode"
+    | "task_manager"
+    | "terminal"
+    | "paint"
+    | "snipping_tool"
+    | "settings"
+    | "clock"
+    | "camera";
   label: string;
   requiresConfirmation: true;
 };
 
-const localAppPattern = /\b(calculator|calc|notepad|file explorer|explorer|visual studio code|vs code|vscode)\b/i;
-const launchPattern = /\b(open|launch|start)\b/i;
+const localAppPattern =
+  /\b(calculator|calc|notepad|text editor|notes|file explorer|explorer|my computer|this pc|visual studio code|vs code|vscode|code editor|task manager|taskmgr|activity monitor|terminal|command prompt|cmd|powershell|console|paint|mspaint|drawing|snipping tool|snip|screenshot|screen clip|screen capture|settings|windows settings|system settings|clock|alarm|timer|stopwatch|camera|webcam)\b/i;
+const launchPattern = /\b(open|launch|start|run|take a|capture|show|bring up)\b/i;
 
 export function isLocalActionRequest(text: string): boolean {
   if (isCapabilityQuery(text)) return false;

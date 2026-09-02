@@ -5,7 +5,19 @@ from typing import Literal
 
 from app.settings import settings
 
-LocalAppId = Literal["calculator", "notepad", "file_explorer", "vscode"]
+LocalAppId = Literal[
+    "calculator",
+    "notepad",
+    "file_explorer",
+    "vscode",
+    "task_manager",
+    "terminal",
+    "paint",
+    "snipping_tool",
+    "settings",
+    "clock",
+    "camera",
+]
 
 
 @dataclass(frozen=True)
@@ -20,9 +32,16 @@ class LocalApp:
 # never used as a program name, path, argument, or shell command.
 LOCAL_APPS: tuple[LocalApp, ...] = (
     LocalApp("calculator", "Calculator", ("calculator", "calc"), "ms-calculator:"),
-    LocalApp("notepad", "Notepad", ("notepad",), "notepad.exe"),
-    LocalApp("file_explorer", "File Explorer", ("file explorer", "explorer"), "explorer.exe"),
-    LocalApp("vscode", "Visual Studio Code", ("visual studio code", "vs code", "vscode"), "vscode://"),
+    LocalApp("notepad", "Notepad", ("notepad", "text editor", "notes"), "notepad.exe"),
+    LocalApp("file_explorer", "File Explorer", ("file explorer", "explorer", "my computer", "this pc", "files folder"), "explorer.exe"),
+    LocalApp("vscode", "Visual Studio Code", ("visual studio code", "vs code", "vscode", "code editor"), "vscode://"),
+    LocalApp("task_manager", "Task Manager", ("task manager", "taskmgr", "activity monitor", "processes"), "taskmgr.exe"),
+    LocalApp("terminal", "Terminal", ("terminal", "command prompt", "cmd", "powershell", "console"), "cmd.exe"),
+    LocalApp("paint", "Paint", ("paint", "mspaint", "drawing app"), "mspaint.exe"),
+    LocalApp("snipping_tool", "Snipping Tool", ("snipping tool", "snip", "screenshot", "screen clip", "screen capture"), "snippingtool.exe"),
+    LocalApp("settings", "Settings", ("settings", "windows settings", "system settings", "control panel"), "ms-settings:"),
+    LocalApp("clock", "Clock", ("clock", "timer", "stopwatch", "alarm"), "ms-clock:"),
+    LocalApp("camera", "Camera", ("camera", "webcam"), "microsoft.windows.camera:"),
 )
 
 
