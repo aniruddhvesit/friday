@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from app.schemas import WebActionPlanRequest, WebActionPlanResponse
 from app.services.web_action_planner import make_web_action_plan

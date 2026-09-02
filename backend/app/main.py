@@ -5,19 +5,20 @@ from app.api.chat import router as chat_router
 from app.api.local_actions import router as local_actions_router
 from app.api.speech import router as speech_router
 from app.api.web_actions import router as web_actions_router
+from app.settings import settings
 
 app = FastAPI(title="Jarvis Backend", version="0.1.0")
 
 # Restrict CORS strictly to local frontend origins (never use wildcard *)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
+    allow_origins=list(settings.allowed_origins) or [
         "http://localhost:1420",
         "http://127.0.0.1:1420",
     ],
     allow_credentials=False,
     allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type"],
+    allow_headers=["*"],
 )
 
 app.include_router(chat_router)
