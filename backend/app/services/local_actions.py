@@ -120,10 +120,13 @@ def execute_local_action(app_id: LocalAppId) -> LocalApp:
         else:
             raise ValueError("That application is not allowlisted.")
 
+    # Enable foreground window permission & Alt key unlock
     if sys.platform == "win32":
         try:
             import ctypes
             ctypes.windll.user32.AllowSetForegroundWindow(-1)
+            ctypes.windll.user32.keybd_event(0x12, 0, 0, 0)
+            ctypes.windll.user32.keybd_event(0x12, 0, 2, 0)
         except Exception:
             pass
 
@@ -162,14 +165,26 @@ def execute_local_action(app_id: LocalAppId) -> LocalApp:
             raise last_err
         raise OSError(f"Could not launch {app.label}")
 
+    # Restore window and bring it directly to foreground
     if sys.platform == "win32":
         try:
             import subprocess
-            cmd = f"Start-Sleep -Milliseconds 250; (New-Object -ComObject WScript.Shell).AppActivate('{app.label}')"
-            subprocess.Popen(
-                ["powershell", "-NoProfile", "-NonInteractive", "-Command", cmd],
-                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-            )
+            activate_script = os.path.join(os.path.dirname(__file__), "activate_app.ps1")
+            if os.path.exists(activate_script):
+                subprocess.Popen(
+                    [
+                        "powershell",
+                        "-NoProfile",
+                        "-NonInteractive",
+                        "-ExecutionPolicy",
+                        "Bypass",
+                        "-File",
+                        activate_script,
+                        "-SearchTerm",
+                        app.label,
+                    ],
+                    creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+                )
         except Exception:
             pass
 
