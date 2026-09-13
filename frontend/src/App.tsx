@@ -232,16 +232,22 @@ export function App() {
       setStatus("thinking");
       try {
         const localAction = await planLocalAction(text);
-        setPendingAction({ type: "local", action: localAction });
+        const result = await executeLocalAction(localAction.appId);
+        setMessages((current) => [...current, { author: "tyler", text: result.message }]);
+        setLocalActionsState("ready");
         setStatus("idle");
+        void playSpeech(result.message);
         return;
       } catch {
         // If not a local app, check if it can be handled as web action or regular chat
         if (isWebActionRequest(text)) {
           try {
             const webAction = await planWebAction(text);
-            setPendingAction({ type: "web", action: webAction });
+            window.open(webAction.url, "_blank", "noopener,noreferrer");
+            const reply = `Opening ${webAction.label}.`;
+            setMessages((current) => [...current, { author: "tyler", text: reply }]);
             setStatus("idle");
+            void playSpeech(reply);
             return;
           } catch {
             // fallback to chat
@@ -254,8 +260,12 @@ export function App() {
       setStatus("thinking");
       try {
         const webAction = await planWebAction(text);
-        setPendingAction({ type: "web", action: webAction });
+        window.open(webAction.url, "_blank", "noopener,noreferrer");
+        const reply = `Opening ${webAction.label}.`;
+        setMessages((current) => [...current, { author: "tyler", text: reply }]);
         setStatus("idle");
+        void playSpeech(reply);
+        return;
       } catch (reason) {
         setError(reason instanceof Error ? reason.message : "Tyler could not prepare that web action.");
         setStatus("error");
