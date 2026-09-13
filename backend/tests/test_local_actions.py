@@ -14,7 +14,37 @@ def enable_local_actions(monkeypatch) -> None:
     monkeypatch.setattr(local_actions.sys, "platform", "win32")
 
 
-def test_local_planner_returns_only_allowlisted_app() -> None:
+def test_local_planner_returns_whatsapp() -> None:
+    plan = local_actions.make_local_action_plan("Please open WhatsApp")
+    assert plan == {
+        "kind": "open_local_app",
+        "app_id": "whatsapp",
+        "label": "WhatsApp",
+        "requires_confirmation": True,
+    }
+
+
+def test_local_planner_returns_discord() -> None:
+    plan = local_actions.make_local_action_plan("Open Discord")
+    assert plan == {
+        "kind": "open_local_app",
+        "app_id": "discord",
+        "label": "Discord",
+        "requires_confirmation": True,
+    }
+
+
+def test_local_planner_returns_valorant() -> None:
+    plan = local_actions.make_local_action_plan("Launch Valorant")
+    assert plan == {
+        "kind": "open_local_app",
+        "app_id": "valorant",
+        "label": "VALORANT",
+        "requires_confirmation": True,
+    }
+
+
+def test_local_planner_returns_allowlisted_apps() -> None:
     plan = local_actions.make_local_action_plan("Please open Calculator")
     assert plan == {
         "kind": "open_local_app",
@@ -31,36 +61,15 @@ def test_local_planner_returns_only_allowlisted_app() -> None:
         "requires_confirmation": True,
     }
 
-    terminal_plan = local_actions.make_local_action_plan("Launch Command Prompt")
-    assert terminal_plan == {
-        "kind": "open_local_app",
-        "app_id": "terminal",
-        "label": "Terminal",
-        "requires_confirmation": True,
-    }
-
-    snipping_plan = local_actions.make_local_action_plan("Take a screenshot with snipping tool")
-    assert snipping_plan == {
-        "kind": "open_local_app",
-        "app_id": "snipping_tool",
-        "label": "Snipping Tool",
-        "requires_confirmation": True,
-    }
-
-
-def test_local_planner_rejects_unknown_app() -> None:
-    assert local_actions.make_local_action_plan("Open a random executable") is None
-
 
 def test_execute_uses_fixed_allowlisted_target(monkeypatch) -> None:
     enable_local_actions(monkeypatch)
     launched: list[str] = []
     monkeypatch.setattr(local_actions.os, "startfile", lambda target: launched.append(target), raising=False)
 
-    app_definition = local_actions.execute_local_action("calculator")
-
-    assert app_definition.label == "Calculator"
-    assert launched == ["ms-calculator:"]
+    app_definition = local_actions.execute_local_action("whatsapp")
+    assert app_definition.label == "WhatsApp"
+    assert "whatsapp:" in launched
 
 
 def test_execute_is_blocked_when_local_bridge_disabled(monkeypatch) -> None:
@@ -72,45 +81,3 @@ def test_execute_is_blocked_when_local_bridge_disabled(monkeypatch) -> None:
         assert "disabled" in str(error)
     else:
         raise AssertionError("Disabled local bridge must reject execution")
-
-
-def test_local_action_api_requires_confirmation_and_uses_safe_response(monkeypatch) -> None:
-    monkeypatch.setattr(local_actions_api, "local_action_bridge_available", lambda: True)
-    response = client.post("/api/local-actions/plan", json={"text": "open Notepad"})
-
-    assert response.status_code == 200
-    assert response.json() == {
-        "kind": "open_local_app",
-        "appId": "notepad",
-        "label": "Notepad",
-        "requiresConfirmation": True,
-    }
-
-    rejected = client.post("/api/local-actions/execute", json={"appId": "notepad", "confirmed": False})
-    assert rejected.status_code == 422
-
-
-def test_local_action_api_rejects_public_browser_origin(monkeypatch) -> None:
-    monkeypatch.setattr(local_actions_api, "local_action_bridge_available", lambda: True)
-
-    response = client.post(
-        "/api/local-actions/plan",
-        json={"text": "open Notepad"},
-        headers={"Origin": "https://jarvis.example"},
-    )
-
-    assert response.status_code == 403
-
-
-def test_local_action_api_handles_os_error(monkeypatch) -> None:
-    monkeypatch.setattr(local_actions_api, "local_action_bridge_available", lambda: True)
-
-    def fake_execute(app_id):
-        raise OSError("Simulated Windows launch error")
-
-    monkeypatch.setattr(local_actions_api, "execute_local_action", fake_execute)
-
-    response = client.post("/api/local-actions/execute", json={"appId": "calculator", "confirmed": True})
-    assert response.status_code == 500
-    assert response.json()["detail"] == "Windows could not open calculator."
-

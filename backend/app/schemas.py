@@ -48,19 +48,7 @@ class WebActionPlanResponse(BaseSchema):
     url: str = Field(min_length=1, max_length=2_000)
 
 
-LocalAppIdType = Literal[
-    "calculator",
-    "notepad",
-    "file_explorer",
-    "vscode",
-    "task_manager",
-    "terminal",
-    "paint",
-    "snipping_tool",
-    "settings",
-    "clock",
-    "camera",
-]
+LocalAppIdType = str
 
 
 class LocalActionPlanRequest(BaseSchema):

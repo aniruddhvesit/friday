@@ -6,12 +6,12 @@ export type WebAction = {
   url: string;
 };
 
-const knownWebsitesPattern = /\b(youtube|spotify|google|reddit|twitter|x\.com|github|wikipedia|netflix|amazon|twitch|instagram|facebook|linkedin|discord|gmail)\b/i;
-const domainPattern = /(?:https?:\/\/|www\.)?[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.(?:com|org|net|io|edu|gov|dev|app|co|ai|in)(?:\/[^\s]*)?/i;
+const knownWebsitesPattern = /\b(youtube\.com|spotify\.com|google\.com|reddit\.com|twitter\.com|x\.com|github\.com|wikipedia\.org|netflix\.com|amazon\.com|twitch\.tv|instagram\.com|facebook\.com|linkedin\.com|gmail\.com|web\.whatsapp\.com)\b/i;
+const domainPattern = /(?:https?:\/\/|www\.)[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.(?:com|org|net|io|edu|gov|dev|app|co|ai|in)(?:\/[^\s]*)?/i;
 const explicitUrlPattern = /https?:\/\/[^\s]+/i;
 const searchOnPlatformPattern = /\b(on|in)\s+(google|youtube|spotify|the web|the internet)\b/i;
-const searchPrefixPattern = /^(?:please\s+)?(?:can you\s+)?(?:search|find|lookup|look up|google|play)\s+/i;
-const openWebsitePrefixPattern = /^(?:please\s+)?(?:can you\s+)?(?:open|launch|start|go to|visit|browse to|navigate to)\s+/i;
+const searchPrefixPattern = /^(?:please\s+)?(?:can you\s+)?(?:search|find|lookup|look up|google)\s+/i;
+const openWebsitePrefixPattern = /^(?:please\s+)?(?:can you\s+)?(?:go to|visit|browse to|navigate to)\s+/i;
 
 export function isCapabilityQuery(text: string): boolean {
   const normalized = text.trim().toLowerCase();
@@ -26,23 +26,19 @@ export function isWebActionRequest(text: string): boolean {
   const trimmed = text.trim();
   if (!trimmed || isCapabilityQuery(trimmed)) return false;
 
-  // Explicit URL provided
   if (explicitUrlPattern.test(trimmed) || domainPattern.test(trimmed)) {
     return true;
   }
 
-  // Explicit search targeting a platform or web
   if (searchOnPlatformPattern.test(trimmed)) {
     return true;
   }
 
-  // "Search / Google / Play / Find" command
   if (searchPrefixPattern.test(trimmed)) {
     return true;
   }
 
-  // "Open / Go to / Visit <website>"
-  if (openWebsitePrefixPattern.test(trimmed) && (knownWebsitesPattern.test(trimmed) || /\b(website|url|webpage|page|site)\b/i.test(trimmed))) {
+  if (openWebsitePrefixPattern.test(trimmed) || knownWebsitesPattern.test(trimmed) || /\b(website|url|webpage|page|site)\b/i.test(trimmed)) {
     return true;
   }
 

@@ -234,12 +234,20 @@ export function App() {
         const localAction = await planLocalAction(text);
         setPendingAction({ type: "local", action: localAction });
         setStatus("idle");
-      } catch (reason) {
-        setLocalActionsState("error");
-        setError(reason instanceof Error ? reason.message : "Tyler could not prepare that local application.");
-        setStatus("error");
+        return;
+      } catch {
+        // If not a local app, check if it can be handled as web action or regular chat
+        if (isWebActionRequest(text)) {
+          try {
+            const webAction = await planWebAction(text);
+            setPendingAction({ type: "web", action: webAction });
+            setStatus("idle");
+            return;
+          } catch {
+            // fallback to chat
+          }
+        }
       }
-      return;
     }
 
     if (isWebActionRequest(text)) {

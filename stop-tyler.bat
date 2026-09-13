@@ -1,0 +1,6 @@
+@echo off
+title Stopping Tyler AI Assistant...
+echo Stopping Tyler background services...
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0stop-tyler.ps1"
+echo Done.
+timeout /t 2 /nobreak >nul
